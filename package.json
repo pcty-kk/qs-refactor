@@ -1,0 +1,24 @@
+{
+  "name": "qs-ts",
+  "version": "1.0.0",
+  "description": "复刻一哈qs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pcty-kk/qs-refactor.git"
+  },
+  "keywords": [
+    "qs",
+    "ts",
+    "url"
+  ],
+  "author": "bighead_66",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pcty-kk/qs-refactor/issues"
+  },
+  "homepage": "https://github.com/pcty-kk/qs-refactor#readme"
+}
