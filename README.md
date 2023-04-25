@@ -14,3 +14,5 @@
    若为 true，在解析时，没有等号的 key 值赋值为 Null  
    若为 false，在解析时，没有等号的 key 值赋值为空字符串
    `"foo" => {foo: null} | "foo" => {foo: ""}`
+5. 处理 & 连接的多参数  
+   `"foo=bar&bar=baz" => { foo: 'bar', bar: 'baz' }`
