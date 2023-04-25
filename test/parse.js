@@ -8,6 +8,8 @@ test("parse()", function (t) {
     st.deepEqual(qs.parse("a[>=]=23"), { a: { ">=": "23" } });
     st.deepEqual(qs.parse("a[<=>]==23"), { a: { "<=>": "=23" } });
     st.deepEqual(qs.parse("a[==]=23"), { a: { "==": "23" } });
+    st.deepEqual(qs.parse("foo", { strictNullHandling: true }), { foo: null });
+    st.deepEqual(qs.parse("foo"), { foo: "" });
     st.end();
   });
 });
