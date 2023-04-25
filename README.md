@@ -16,3 +16,5 @@
    `"foo" => {foo: null} | "foo" => {foo: ""}`
 5. 处理 & 连接的多参数  
    `"foo=bar&bar=baz" => { foo: 'bar', bar: 'baz' }`
+6. 解析数组参数语法
+   `"a[]=b&a[]=c" => { a: ['b', 'c'] }`

@@ -31,4 +31,11 @@ test("parse()", function (t) {
     });
     st.end();
   });
+
+  t.test("arrayFormat: brackets only allows explicit arrays", function (st) {
+    st.deepEqual(qs.parse("a[]=b&a[]=c", { arrayFormat: "brackets" }), {
+      a: ["b", "c"],
+    });
+    st.end();
+  });
 });
