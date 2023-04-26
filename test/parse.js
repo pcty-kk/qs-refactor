@@ -36,6 +36,15 @@ test("parse()", function (t) {
     st.deepEqual(qs.parse("a[]=b&a[]=c", { arrayFormat: "brackets" }), {
       a: ["b", "c"],
     });
+    st.deepEqual(qs.parse("a[0]=b&a[1]=c", { arrayFormat: "brackets" }), {
+      a: ["b", "c"],
+    });
+    st.deepEqual(qs.parse("a=b,c", { arrayFormat: "brackets" }), {
+      a: "b,c",
+    });
+    st.deepEqual(qs.parse("a=b&a=c", { arrayFormat: "brackets" }), {
+      a: ["b", "c"],
+    });
     st.end();
   });
 });
