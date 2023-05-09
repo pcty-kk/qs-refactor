@@ -104,4 +104,16 @@ test("parse()", function (t) {
     st.deepEqual(qs.parse("a.b=c", { allowDots: true }), { a: { b: "c" } });
     st.end();
   });
+
+  t.deepEqual(
+    qs.parse("a[b]=c"),
+    { a: { b: "c" } },
+    "parses a single nested string"
+  );
+
+  t.deepEqual(
+    qs.parse("a[b][c]=d"),
+    { a: { b: { c: "d" } } },
+    "parses a double nested string"
+  );
 });
