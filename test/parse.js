@@ -116,4 +116,46 @@ test("parse()", function (t) {
     { a: { b: { c: "d" } } },
     "parses a double nested string"
   );
+  t.deepEqual(
+    qs.parse("a[b][c][d][e][f][g][h]=i"),
+    { a: { b: { c: { d: { e: { f: { "[g][h]": "i" } } } } } } },
+    "defaults to a depth of 5"
+  );
+  t.test("only parses one level when depth = 1", { skip: true }, function (st) {
+    st.deepEqual(qs.parse("a[b][c]=d", { depth: 1 }), {
+      a: { b: { "[c]": "d" } },
+    });
+    st.deepEqual(qs.parse("a[b][c][d]=e", { depth: 1 }), {
+      a: { b: { "[c][d]": "e" } },
+    });
+    st.end();
+  });
+
+  t.test("uses original key when depth = 0", { skip: true }, function (st) {
+    st.deepEqual(qs.parse("a[0]=b&a[1]=c", { depth: 0 }), {
+      "a[0]": "b",
+      "a[1]": "c",
+    });
+    st.deepEqual(qs.parse("a[0][0]=b&a[0][1]=c&a[1]=d&e=2", { depth: 0 }), {
+      "a[0][0]": "b",
+      "a[0][1]": "c",
+      "a[1]": "d",
+      e: "2",
+    });
+    st.end();
+  });
+
+  t.test("uses original key when depth = false", { skip: true }, function (st) {
+    st.deepEqual(qs.parse("a[0]=b&a[1]=c", { depth: false }), {
+      "a[0]": "b",
+      "a[1]": "c",
+    });
+    st.deepEqual(qs.parse("a[0][0]=b&a[0][1]=c&a[1]=d&e=2", { depth: false }), {
+      "a[0][0]": "b",
+      "a[0][1]": "c",
+      "a[1]": "d",
+      e: "2",
+    });
+    st.end();
+  });
 });
