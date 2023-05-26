@@ -121,7 +121,7 @@ test("parse()", function (t) {
     { a: { b: { c: { d: { e: { f: { "[g][h]": "i" } } } } } } },
     "defaults to a depth of 5"
   );
-  t.test("only parses one level when depth = 1", { skip: true }, function (st) {
+  t.test("only parses one level when depth = 1", function (st) {
     st.deepEqual(qs.parse("a[b][c]=d", { depth: 1 }), {
       a: { b: { "[c]": "d" } },
     });
@@ -131,7 +131,7 @@ test("parse()", function (t) {
     st.end();
   });
 
-  t.test("uses original key when depth = 0", { skip: true }, function (st) {
+  t.test("uses original key when depth = 0", function (st) {
     st.deepEqual(qs.parse("a[0]=b&a[1]=c", { depth: 0 }), {
       "a[0]": "b",
       "a[1]": "c",
@@ -145,7 +145,7 @@ test("parse()", function (t) {
     st.end();
   });
 
-  t.test("uses original key when depth = false", { skip: true }, function (st) {
+  t.test("uses original key when depth = false", function (st) {
     st.deepEqual(qs.parse("a[0]=b&a[1]=c", { depth: false }), {
       "a[0]": "b",
       "a[1]": "c",
@@ -156,6 +156,58 @@ test("parse()", function (t) {
       "a[1]": "d",
       e: "2",
     });
+    st.end();
+  });
+
+  t.deepEqual(qs.parse("a=b&a=c"), { a: ["b", "c"] }, "parses a simple array");
+
+  t.test("parses an explicit array", function (st) {
+    st.deepEqual(qs.parse("a[]=b"), { a: ["b"] });
+    st.deepEqual(qs.parse("a[]=b&a[]=c"), { a: ["b", "c"] });
+    st.deepEqual(qs.parse("a[]=b&a[]=c&a[]=d"), { a: ["b", "c", "d"] });
+    st.end();
+  });
+  t.test(
+    "parses a mix of simple and explicit arrays",
+
+    function (st) {
+      st.deepEqual(qs.parse("a=b&a[]=c"), { a: ["b", "c"] });
+      st.deepEqual(qs.parse("a[]=b&a=c"), { a: ["b", "c"] });
+      st.deepEqual(qs.parse("a[0]=b&a=c"), { a: ["b", "c"] });
+      st.deepEqual(qs.parse("a=b&a[0]=c"), { a: ["b", "c"] });
+
+      st.deepEqual(qs.parse("a[1]=b&a=c", { arrayLimit: 20 }), {
+        a: ["b", "c"],
+      });
+      st.deepEqual(qs.parse("a[]=b&a=c", { arrayLimit: 0 }), {
+        a: ["b", "c"],
+      });
+      st.deepEqual(qs.parse("a[]=b&a=c"), { a: ["b", "c"] });
+
+      st.deepEqual(qs.parse("a=b&a[1]=c", { arrayLimit: 20 }), {
+        a: ["b", "c"],
+      });
+      st.deepEqual(qs.parse("a=b&a[]=c", { arrayLimit: 0 }), {
+        a: ["b", "c"],
+      });
+      st.deepEqual(qs.parse("a=b&a[]=c"), { a: ["b", "c"] });
+
+      st.end();
+    }
+  );
+
+  t.test("parses a nested array", function (st) {
+    st.deepEqual(qs.parse("a[b][]=c&a[b][]=d"), { a: { b: ["c", "d"] } });
+    st.deepEqual(qs.parse("a[>=]=25"), { a: { ">=": "25" } });
+    st.end();
+  });
+
+  t.test("allows to specify array indices", function (st) {
+    st.deepEqual(qs.parse("a[1]=c&a[0]=b&a[2]=d"), { a: ["b", "c", "d"] });
+    st.deepEqual(qs.parse("a[1]=c&a[0]=b"), { a: ["b", "c"] });
+    st.deepEqual(qs.parse("a[1]=c", { arrayLimit: 20 }), { a: ["c"] });
+    st.deepEqual(qs.parse("a[1]=c", { arrayLimit: 0 }), { a: { 1: "c" } });
+    st.deepEqual(qs.parse("a[1]=c"), { a: ["c"] });
     st.end();
   });
 });
