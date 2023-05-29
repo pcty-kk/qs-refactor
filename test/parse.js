@@ -210,4 +210,26 @@ test("parse()", function (t) {
     st.deepEqual(qs.parse("a[1]=c"), { a: ["c"] });
     st.end();
   });
+
+  t.test("limits specific array indices to arrayLimit", function (st) {
+    st.deepEqual(qs.parse("a[20]=a", { arrayLimit: 20 }), { a: ["a"] });
+    st.deepEqual(qs.parse("a[21]=a", { arrayLimit: 20 }), {
+      a: { 21: "a" },
+    });
+
+    st.deepEqual(qs.parse("a[20]=a"), { a: ["a"] });
+    st.deepEqual(qs.parse("a[21]=a"), { a: { 21: "a" } });
+    st.end();
+  });
+
+  t.deepEqual(
+    qs.parse("a[12b]=c"),
+    { a: { "12b": "c" } },
+    "supports keys that begin with a number"
+  );
+
+  t.test("supports encoded = signs", function (st) {
+    st.deepEqual(qs.parse("he%3Dllo=th%3Dere"), { "he=llo": "th=ere" });
+    st.end();
+  });
 });
